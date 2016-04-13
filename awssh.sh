@@ -10,6 +10,15 @@ instance_keyname() {
 	grep -m 1 "INSTANCES" | cut -f 10 
 }
 
+instance_id() {
+	grep -m 1 "INSTANCES" | cut -f 8
+}
+
+
+instance_state() {
+	grep -m 1 "STATE" | cut -f 3 
+}
+
 awssh() {
 	local url
 	local keyname
@@ -19,6 +28,13 @@ awssh() {
 		keyname="hyraxbio"
 	else
 		data=`instance_named "$1"`
+		if [ $(echo "$data" | instance_state) = "stopped" ]; then
+			echo "Instance is stopped please wait."
+			id=`echo "$data" | instance_id`
+			aws ec2 start-instances --instance-ids $id &> /dev/null
+			aws ec2 wait instance-status-ok --instance-ids $id
+			data=`instance_named "$1"`	
+		fi
 		url=`echo "$data" | instance_url`
 		keyname=`echo "$data" | instance_keyname`
 	fi

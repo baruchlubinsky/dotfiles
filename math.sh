@@ -23,3 +23,7 @@ total() {
 month_hours() {
 	file_or_string $1 | awk '{print ($1 * 24 * 30)}'
 }
+
+year_hours() {
+	file_or_string $1 | awk '{print ($1 * 24 * 30 * 12)}'
+}
