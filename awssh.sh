@@ -49,7 +49,7 @@ awssh() {
 	else
 		data=`instance_named "$name"`
 		if [ $sg -eq 1 ]; then 
-			myip=$(curl myexternalip.com/raw 2> /dev/null)
+			myip=$(curl http://ipv4bot.whatismyipaddress.com/ 2> /dev/null)
 			sgid=$(echo "$data" | instance_sg)
 			echo "Authorizing $myip in $sgid"
 			aws --region eu-west-1 ec2 authorize-security-group-ingress --group-id $sgid --protocol tcp --port 22 --cidr $myip/24
